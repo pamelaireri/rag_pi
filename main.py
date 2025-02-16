@@ -6,7 +6,7 @@ from pathlib import Path
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma, Pinecone
 import pinecone
-
+from pinecone import Pinecone, ServerlessSpec
 # Document processing imports
 from langchain.document_loaders import DirectoryLoader
 from langchain.text_splitter import CharacterTextSplitter
@@ -97,10 +97,16 @@ def embeddings_on_pinecone(texts):
     """
     try:
         # Initialize Pinecone
-        pinecone.init(
-            api_key=st.session_state.pinecone_api_key,
-            environment=st.session_state.pinecone_env
-        )
+        #pinecone.init(
+           # api_key=st.session_state.pinecone_api_key,
+           # environment=st.session_state.pinecone_env
+       # )
+
+       #Initialling with class per error
+       
+        pc = Pinecone(
+            api_key=os.environ.get("PINECONE_API_KEY")
+) 
         
         # Create embeddings and store in Pinecone
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
