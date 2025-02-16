@@ -113,7 +113,7 @@ def embeddings_on_pinecone(texts):
         
         # TODO: Add batch processing for large document sets
         vectordb = Pinecone.from_documents(
-            texts, 
+             [text.page_content for text in texts], 
             embeddings, 
             index_name=st.session_state.pinecone_index
         )
