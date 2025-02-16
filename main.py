@@ -7,8 +7,8 @@ from langchain.embeddings import OpenAIEmbeddings
 #Replacing
 #from langchain.vectorstores import Chroma, Pinecone
 from langchain_community.vectorstores import Pinecone
-
 import pinecone
+
 from pinecone import Pinecone, ServerlessSpec
 # Document processing imports
 from langchain.document_loaders import DirectoryLoader
