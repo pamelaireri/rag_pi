@@ -107,7 +107,7 @@ def embeddings_on_pinecone(texts):
 
         # Initialize Pinecone correctly
         #pc = Pinecone(api_key=st.session_state.pinecone_api_key)
-        pc = pinecone.Pinecone(PINECONE_API_KEY=st.session_state.pinecone_api_key)
+        pinecone.init(api_key=st.session_state.pinecone_api_key)
 
         # Create embeddings and store in Pinecone
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
