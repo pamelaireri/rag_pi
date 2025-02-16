@@ -8,8 +8,8 @@ from langchain.embeddings import OpenAIEmbeddings
 #from langchain.vectorstores import Chroma, Pinecone
 from langchain_community.vectorstores import Pinecone
 import pinecone
+from langchain_community.vectorstores import Pinecone
 
-from pinecone import Pinecone, ServerlessSpec
 # Document processing imports
 from langchain.document_loaders import DirectoryLoader
 from langchain.text_splitter import CharacterTextSplitter
@@ -112,7 +112,7 @@ def embeddings_on_pinecone(texts):
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
         
         # TODO: Add batch processing for large document sets
-        vectordb = Pinecone.from_documents(
+        vectordb = Pinecone.from_texts(
              [text.page_content for text in texts], 
             embeddings, 
             index_name=st.session_state.pinecone_index
