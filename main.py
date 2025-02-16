@@ -19,7 +19,7 @@ from langchain.llms.openai import OpenAIChat
 import streamlit as st
 
 
-# Set up our directory structure
+# Set up our directory structur
 TMP_DIR = Path(__file__).resolve().parent.joinpath('data', 'tmp')
 LOCAL_VECTOR_STORE_DIR = Path(__file__).resolve().parent.joinpath('data', 'vector_store')
 
