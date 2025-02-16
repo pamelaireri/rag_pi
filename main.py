@@ -8,7 +8,8 @@ from langchain.embeddings import OpenAIEmbeddings
 #from langchain.vectorstores import Chroma, Pinecone
 from langchain_community.vectorstores import Pinecone
 import pinecone
-from langchain_community.vectorstores import Pinecone
+#from langchain_community.vectorstores import Pinecone
+from pinecone import Pinecone, ServerlessSpec
 
 # Document processing imports
 from langchain.document_loaders import DirectoryLoader
@@ -106,8 +107,12 @@ def embeddings_on_pinecone(texts):
       #  )
 
         # Initialize Pinecone correctly
-        #pc = Pinecone(api_key=st.session_state.pinecone_api_key)
-        pinecone.init(api_key=st.session_state.pinecone_api_key)
+        pc = Pinecone(api_key=st.session_state.pinecone_api_key)
+        # Ensure the Pinecone index exists
+        index_name = st.session_state.pinecone_index
+        if index_name not in pc.list_indexes().names():
+            st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
+            return None
 
         # Create embeddings and store in Pinecone
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
