@@ -103,7 +103,7 @@ def embeddings_on_pinecone(texts):
         # Initialize Pinecone
         # Initialize a Pinecone client with your API key
         api_key=st.session_state.pinecone_api_key
-        pc = Pinecone(index_name = st.session_state.pinecone_index,
+        pc = Pinecone(index = "ragpi",
                       embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key),
                       text_key=texts
                     )
