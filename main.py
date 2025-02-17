@@ -118,11 +118,11 @@ def embeddings_on_pinecone(texts):
 
         # TODO: Add batch processing for large document sets
         # Use pcvs instead of Pinecone for vector operations
-
-        vectordb = PineconeVectorStore.from_documents(
-            documents=texts,
-            embedding=embeddings,
-            index_name=index_name,
+        #PineconeVectorStore.from_documents
+        vectordb = Pinecone.from_documents(
+             texts, 
+            embeddings, 
+            index_name=st.session_state.pinecone_index
     
         )
         
