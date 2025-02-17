@@ -10,7 +10,7 @@ from langchain_community.vectorstores import Pinecone as pvs  # This is Langchai
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
 
-import pinecone
+from pinecone import Pinecone, ServerlessSpec
 
 
 # Document processing imports
@@ -104,7 +104,7 @@ def embeddings_on_pinecone(texts):
         # Initialize Pinecone
         # Initialize a Pinecone client with your API key
         api_key=st.session_state.pinecone_api_key
-        pc = pinecone.init(api_key=st.session_state.pinecone_api_key
+        pc = Pinecone(api_key=st.session_state.pinecone_api_key
 )
         # Ensure the Pinecone index exists
         
