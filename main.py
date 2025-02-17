@@ -2,11 +2,15 @@ import os
 import tempfile
 from pathlib import Path
 
+from pinecone import Pinecone
+
 # Vector store and embedding imports
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma, Pinecone
 from langchain_community.vectorstores import Pinecone as pvs  # This is Langchain's vectorstore wrapper
 from langchain_pinecone import PineconeVectorStore
+from langchain_openai import OpenAIEmbeddings
+
 
 # Document processing imports
 from langchain_community.document_loaders import DirectoryLoader
@@ -101,6 +105,7 @@ def embeddings_on_pinecone(texts):
         api_key=st.session_state.pinecone_api_key
         pc = Pinecone()
         # Ensure the Pinecone index exists
+        
         index_name = st.session_state.pinecone_index
         if index_name not in pc.list_indexes().names():
          st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
@@ -112,12 +117,11 @@ def embeddings_on_pinecone(texts):
         # TODO: Add batch processing for large document sets
         # Use pcvs instead of Pinecone for vector operations
 
-        vectordb = PineconeVectorStore(
+        vectordb = PineconeVectorStore.from_documents(
             documents=texts,
             embedding=embeddings,
             index_name=index_name,
-            pinecone_api_key=st.session_state.pinecone_api_key
-
+    
         )
         
         # Add the texts to the vector store
