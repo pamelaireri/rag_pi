@@ -5,7 +5,7 @@ from pathlib import Path
 # Vector store and embedding imports
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma, Pinecone
-import pinecone
+
 from pinecone import Pinecone
 
 # Document processing imports
