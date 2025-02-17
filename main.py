@@ -4,12 +4,9 @@ from pathlib import Path
 
 # Vector store and embedding imports
 from langchain.embeddings import OpenAIEmbeddings
-#Replacing
-#from langchain.vectorstores import Chroma, Pinecone
-from langchain_community.vectorstores import Pinecone
+from langchain.vectorstores import Chroma, Pinecone
 import pinecone
-#from langchain_community.vectorstores import Pinecone
-from pinecone import Pinecone, ServerlessSpec
+from pinecone import Pinecone
 
 # Document processing imports
 from langchain.document_loaders import DirectoryLoader
@@ -22,8 +19,7 @@ from langchain.llms.openai import OpenAIChat
 # UI imports
 import streamlit as st
 
-
-# Set up our directory structur
+# Set up our directory structure
 TMP_DIR = Path(__file__).resolve().parent.joinpath('data', 'tmp')
 LOCAL_VECTOR_STORE_DIR = Path(__file__).resolve().parent.joinpath('data', 'vector_store')
 
@@ -101,25 +97,20 @@ def embeddings_on_pinecone(texts):
     """
     try:
         # Initialize Pinecone
-       # pinecone.init(
-       #     api_key=st.session_state.pinecone_api_key,
-      #      environment=st.session_state.pinecone_env
-      #  )
-
-        # Initialize Pinecone correctly
+        # Initialize a Pinecone client with your API key
         pc = Pinecone(api_key=st.session_state.pinecone_api_key)
         # Ensure the Pinecone index exists
         index_name = st.session_state.pinecone_index
         if index_name not in pc.list_indexes().names():
-            st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
-            return None
+         st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
+        return None
 
-        # Create embeddings and store in Pinecone
+          # Create embeddings and store in Pinecone
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
         
         # TODO: Add batch processing for large document sets
-        vectordb = Pinecone.from_texts(
-             [text.page_content for text in texts], 
+        vectordb = Pinecone.from_documents(
+            texts, 
             embeddings, 
             index_name=st.session_state.pinecone_index
         )
@@ -128,7 +119,6 @@ def embeddings_on_pinecone(texts):
     except Exception as e:
         st.error(f"Error creating Pinecone vector store: {str(e)}")
         return None
-
 def query_llm(retriever, query):
     """
     Processes queries using the retrieval chain.
@@ -260,7 +250,7 @@ def process_documents():
             # Split documents into chunks
             texts = split_documents(documents)
             
-            # Create vector stores
+            # Create vector store
             if not st.session_state.pinecone_db:
                 st.session_state.retriever = embeddings_on_local_vectordb(texts)
             else:

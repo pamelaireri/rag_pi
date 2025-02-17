@@ -74,6 +74,7 @@ langchain-text-splitters==0.3.6
 langdetect==1.0.9
 langsmith==0.3.8
 lxml==5.3.1
+lz4==4.4.3
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 marshmallow==3.26.1
@@ -117,6 +118,7 @@ pdfminer.six==20240706
 pi_heif==0.21.0
 pikepdf==9.5.2
 pillow==11.1.0
+pinecone==6.0.1
 pinecone-client==5.0.1
 pinecone-plugin-inference==1.1.0
 pinecone-plugin-interface==0.0.7
@@ -124,6 +126,7 @@ posthog==3.13.0
 propcache==0.2.1
 proto-plus==1.26.0
 protobuf==5.29.3
+protoc-gen-openapiv2==0.0.1
 psutil==7.0.0
 pyarrow==19.0.0
 pyasn1==0.6.1
