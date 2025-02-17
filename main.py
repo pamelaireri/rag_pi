@@ -5,7 +5,7 @@ from pathlib import Path
 # Vector store and embedding imports
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma, Pinecone
-from langchain_community.vectorstores import Pinecone as LangchainPinecone
+from langchain_community.vectorstores import Pinecone as pvs  # This is Langchain's vectorstore wrapper
 
 # Document processing imports
 from langchain_community.document_loaders import DirectoryLoader
@@ -109,8 +109,9 @@ def embeddings_on_pinecone(texts):
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
 
         # TODO: Add batch processing for large document sets
-       # Initialize vector store using Langchain's Pinecone
-        vectordb = LangchainPinecone.from_documents(
+        # Use pcvs instead of Pinecone for vector operations
+
+        vectordb = pvs.from_documents(
             documents=texts,
             embedding=embeddings,
             index_name=index_name
