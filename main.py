@@ -119,6 +119,9 @@ def embeddings_on_pinecone(texts):
         # TODO: Add batch processing for large document sets
         # Use pcvs instead of Pinecone for vector operations
         #PineconeVectorStore.from_documents
+        
+        st.write("7. Initializing vector store...")
+
         vectordb = Pinecone.from_documents(
              texts, 
             embeddings, 
@@ -126,9 +129,6 @@ def embeddings_on_pinecone(texts):
     
         )
         
-        # Add the texts to the vector store
-        vectorstore.add_texts(texts=[t.page_content for t in texts])
-       
         return vectordb.as_retriever()
     except Exception as e:
         st.error(f"Error creating Pinecone vector store: {str(e)}")
