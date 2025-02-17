@@ -3,18 +3,18 @@ import tempfile
 from pathlib import Path
 
 # Vector store and embedding imports
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma, Pinecone
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import Chroma, Pinecone
 
 from pinecone import Pinecone
 
 # Document processing imports
-from langchain.document_loaders import DirectoryLoader
-from langchain.text_splitter import CharacterTextSplitter
+from langchain_community.document_loaders import DirectoryLoader
+from langchain.text_splitter import CharacterTextSplitter  # This should stay in langchain core
 
 # LLM and chain imports
 from langchain.chains import ConversationalRetrievalChain
-from langchain.llms.openai import OpenAIChat
+from langchain_openai import ChatOpenAI  # This replaces OpenAIChat
 
 # UI imports
 import streamlit as st
