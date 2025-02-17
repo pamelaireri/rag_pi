@@ -146,7 +146,7 @@ def query_llm(retriever, query):
     try:
         # TODO: Add custom prompting for better answers
         qa_chain = ConversationalRetrievalChain.from_llm(
-            llm=OpenAIChat(openai_api_key=st.session_state.openai_api_key),
+            llm=ChatOpenAI(openai_api_key=st.session_state.openai_api_key),
             retriever=retriever,
             return_source_documents=True,
         )
