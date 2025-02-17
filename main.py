@@ -103,9 +103,9 @@ def embeddings_on_pinecone(texts):
          st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
         return None
 
-          # Create embeddings and store in Pinecone
+          # Create embeddings
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
-        
+
         # TODO: Add batch processing for large document sets
         vectordb = Pinecone.from_documents(
             texts, 
