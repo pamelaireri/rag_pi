@@ -97,8 +97,8 @@ def embeddings_on_pinecone(texts):
     try:
         # Initialize Pinecone
         # Initialize a Pinecone client with your API key
-        api_key=st.session_state.pinecone_api_key
-        pc = Pinecone()
+        
+        pc = Pinecone(api_key=st.session_state.pinecone_api_key)
         # Ensure the Pinecone index exists
         index_name = st.session_state.pinecone_index
         if index_name not in pc.list_indexes().names():
