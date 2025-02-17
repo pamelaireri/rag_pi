@@ -118,10 +118,7 @@ pdfminer.six==20240706
 pi_heif==0.21.0
 pikepdf==9.5.2
 pillow==11.1.0
-pinecone==6.0.1
 pinecone-client==5.0.1
-pinecone-plugin-inference==1.1.0
-pinecone-plugin-interface==0.0.7
 posthog==3.13.0
 propcache==0.2.1
 proto-plus==1.26.0
