@@ -2,7 +2,6 @@ import os
 import tempfile
 from pathlib import Path
 
-from pinecone import Pinecone
 
 # Vector store and embedding imports
 from langchain_community.embeddings import OpenAIEmbeddings
@@ -10,6 +9,8 @@ from langchain_community.vectorstores import Chroma, Pinecone
 from langchain_community.vectorstores import Pinecone as pvs  # This is Langchain's vectorstore wrapper
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
+
+import pinecone
 
 
 # Document processing imports
@@ -103,7 +104,8 @@ def embeddings_on_pinecone(texts):
         # Initialize Pinecone
         # Initialize a Pinecone client with your API key
         api_key=st.session_state.pinecone_api_key
-        pc = Pinecone()
+        pc = pinecone.init(api_key=st.session_state.pinecone_api_key
+)
         # Ensure the Pinecone index exists
         
         index_name = st.session_state.pinecone_index
