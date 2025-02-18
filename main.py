@@ -294,6 +294,9 @@ def process_documents():
             
             # Load and process documents
             documents = load_documents()
+            if documents:
+                st.error("Document loading failed.")
+                return
             
             # Clean up temporary files
             for file in TMP_DIR.iterdir():
@@ -309,6 +312,10 @@ def process_documents():
                 st.session_state.retriever = embeddings_on_pinecone(texts)
             
             st.success("Documents processed successfully!")
+
+            #store retriever in session state
+            st.session_state.retriever = retriever
+            st.success("Documents processed successfully")
             
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
