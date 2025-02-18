@@ -180,7 +180,8 @@ def embeddings_on_pinecone(texts):
             index_name=index_name
         )
 
-        retriever = vectordb.as_retriever()
+        retriever = vectordb.as_retriever(search_kwargs={'k': 2})  # Retrieve top 2 similar documents
+
 
         if retriever is None:
             st.error("Error: Pinecone retriever is None.")
