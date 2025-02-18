@@ -294,24 +294,34 @@ def process_documents():
             
             # Load and process documents
             documents = load_documents()
-            if documents:
+            if not documents:
                 st.error("Document loading failed.")
                 return
             
-            # Clean up temporary files
+            # Clean up temporary files (*****Ask to gain a better understanding****)
             for file in TMP_DIR.iterdir():
                 TMP_DIR.joinpath(file).unlink()
             
             # Split documents into chunks
             texts = split_documents(documents)
+            if not texts:
+                st.error("Text splitting failed.")
+                return
             
             # Create vector store
             if not st.session_state.pinecone_db:
-                st.session_state.retriever = embeddings_on_local_vectordb(texts)
+                retriever = embeddings_on_local_vectordb(texts)
             else:
-                st.session_state.retriever = embeddings_on_pinecone(texts)
+                retriever = embeddings_on_pinecone(texts)
+
+            if retriever is None:
+                st.error("Retriever initialization failed.")
+                return
+                #st.session_state.retriever = embeddings_on_local_vectordb(texts)
+            #else:
+               # st.session_state.retriever = embeddings_on_pinecone(texts)
             
-            st.success("Documents processed successfully!")
+            s#t.success("Documents processed successfully!")
 
             #store retriever in session state
             st.session_state.retriever = retriever
