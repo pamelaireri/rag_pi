@@ -98,19 +98,25 @@ def embeddings_on_local_vectordb(texts):
         if not texts:
             st.error("No text chunks were created. Check document splitting.")
             return None
+        
+        st.write("Initializing Chroma vector store...")
 
         vectordb = Chroma.from_documents(
             texts, 
             embedding=OpenAIEmbeddings(),
             persist_directory=LOCAL_VECTOR_STORE_DIR.as_posix()
         )
-        vectordb.persist()
-        if retriever is None:
-            st.error("Error: Retriever could not be initialized from the vector store.")
-
         
-        # TODO: Experiment with different k values
+        st.write("Initializing Chroma vector store...")
+
+        vectordb.persist()
         retriever = vectordb.as_retriever(search_kwargs={'k': 7})
+
+        if retriever is None:
+            st.error("Error: Retriever could not be initialized from Chroma.")
+        else:
+            st.success("Retriever successfully created!")
+
         return retriever
     except Exception as e:
         st.error(f"Error creating local vector store: {str(e)}")
@@ -151,9 +157,9 @@ def embeddings_on_pinecone(texts):
         # Use pcvs instead of Pinecone for vector operations
         #PineconeVectorStore.from_documents
         
-        st.write("7. Initializing vector store...")
+        st.write("Creating Pinecone vector store...")
 
-        vectordb = Pinecone.from_documents(
+        """vectordb = Pinecone.from_documents(
             texts, 
             embeddings, 
             index_name=st.session_state.pinecone_index
@@ -167,7 +173,26 @@ def embeddings_on_pinecone(texts):
         return vectordb.as_retriever()
     except Exception as e:
         st.error(f"Error creating Pinecone vector store: {str(e)}")
+        return None """
+        vectordb = PineconeVectorStore.from_documents(
+            documents=texts,
+            embedding=embeddings,
+            index_name=index_name
+        )
+
+        retriever = vectordb.as_retriever()
+
+        if retriever is None:
+            st.error("Error: Pinecone retriever is None.")
+        else:
+            st.success("Pinecone retriever successfully created!")
+
+        return retriever
+    except Exception as e:
+        st.error(f"Error creating Pinecone vector store: {str(e)}")
         return None
+
+        
 def query_llm(retriever, query):
     """
     Processes queries using the retrieval chain.
@@ -306,11 +331,16 @@ def process_documents():
             texts = split_documents(documents)
             if not texts:
                 st.error("Text splitting failed.")
-                return
+            else:
+                st.success(f"Generated {len(texts)} text chunks.")
+
+            # ✅ Add a debug print before creating the retriever
+            st.write("Creating retriever...")
+            return
             
             # Create vector store
             if not st.session_state.pinecone_db:
-                retriever = embeddings_on_local_vectordb(texts)
+                   retriever = embeddings_on_local_vectordb(texts)
             else:
                 retriever = embeddings_on_pinecone(texts)
 
