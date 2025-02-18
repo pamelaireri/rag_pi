@@ -45,6 +45,9 @@ def load_documents():
     """
     try:
         # TODO: Add validation to check if directory is empty
+        if not any(TMP_DIR.iterdir()):
+            st.error("No documents found in the temporary directory.")
+            return []
         loader = DirectoryLoader(TMP_DIR.as_posix(), glob='**/*.pdf')
         documents = loader.load()
         return documents
@@ -77,12 +80,19 @@ def embeddings_on_local_vectordb(texts):
     """
     try:
         # TODO: Add progress indicator for embedding creation
+        if not texts:
+            st.error("No text chunks were created. Check document splitting.")
+            return None
+
         vectordb = Chroma.from_documents(
             texts, 
             embedding=OpenAIEmbeddings(),
             persist_directory=LOCAL_VECTOR_STORE_DIR.as_posix()
         )
         vectordb.persist()
+        if retriever is None:
+            st.error("Error: Retriever could not be initialized from the vector store.")
+
         
         # TODO: Experiment with different k values
         retriever = vectordb.as_retriever(search_kwargs={'k': 7})
@@ -145,6 +155,9 @@ def query_llm(retriever, query):
     """
     try:
         # TODO: Add custom prompting for better answers
+        if retriever is None:
+            st.error("Error: The retriever is None. Ensure documents are processed correctly.")
+            return "Error: The retriever is not initialized."
         qa_chain = ConversationalRetrievalChain.from_llm(
             llm=ChatOpenAI(openai_api_key=st.session_state.openai_api_key),
             retriever=retriever,
