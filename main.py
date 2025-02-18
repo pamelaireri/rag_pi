@@ -330,9 +330,11 @@ def process_documents():
             # Split documents into chunks
             texts = split_documents(documents)
             if not texts:
-                st.error("Text splitting failed.")
+                st.error("Text splitting failed. No text chunks generated.")
             else:
                 st.success(f"Generated {len(texts)} text chunks.")
+                st.write(f"Sample text chunk: {texts[0].page_content[:500]}")  # Show preview
+
 
             # ✅ Add a debug print before creating the retriever
             st.write("Creating retriever...")
@@ -340,12 +342,12 @@ def process_documents():
             
             # Create vector store
             if not st.session_state.pinecone_db:
-                   retriever = embeddings_on_local_vectordb(texts)
+                retriever = embeddings_on_local_vectordb(texts)
             else:
                 retriever = embeddings_on_pinecone(texts)
 
             if retriever is None:
-                st.error("Retriever initialization failed.")
+                st.error("Retriever initialization failed. Debug embeddings function.")
                 return
                 #st.session_state.retriever = embeddings_on_local_vectordb(texts)
             #else:
@@ -356,6 +358,8 @@ def process_documents():
             #store retriever in session state
             st.session_state.retriever = retriever
             st.success("Documents processed successfully")
+            st.write("✅ Retriever stored in session state.")
+
             
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
