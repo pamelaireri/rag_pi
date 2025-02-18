@@ -123,7 +123,7 @@ def embeddings_on_pinecone(texts):
         st.write("7. Initializing vector store...")
 
         vectordb = Pinecone.from_documents(
-             texts, 
+            texts, 
             embeddings, 
             index_name=st.session_state.pinecone_index
     
