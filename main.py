@@ -50,6 +50,11 @@ def load_documents():
             return []
         loader = DirectoryLoader(TMP_DIR.as_posix(), glob='**/*.pdf')
         documents = loader.load()
+
+        if not documents:
+            st.error("Documents could not be loaded. Check file formats or permissions")
+        else:
+            st.success(f"Loaded{len(documents)} documents scucessfully")
         return documents
     except Exception as e:
         st.error(f"Error loading documents: {str(e)}")
