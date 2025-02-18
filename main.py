@@ -131,13 +131,12 @@ def embeddings_on_pinecone(texts):
         if not texts:
             st.error("No text chunks received for Pinecone vectorization.")
             return None
-        api_key=st.session_state.pinecone_api_key
-        pc = Pinecone(api_key=st.session_state.pinecone_api_key
-        
-        if index_name not in pc.list_indexes().names():
-            st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
-            return None            
-)
+        pc = Pinecone(api_key=st.session_state.pinecone_api_key)
+                      
+        index_name = st.session_state.pinecone_index
+        # Ensure the Pinecone index exists
+        index_list = pc.list_indexes().names()        
+
         # Ensure the Pinecone index exists
         
         index_name = st.session_state.pinecone_index
@@ -160,6 +159,10 @@ def embeddings_on_pinecone(texts):
             index_name=st.session_state.pinecone_index
     
         )
+        if retriever is None:
+            st.error("Error: Pinecone retriever is None.")
+        else:
+            st.success("Pinecone retriever successfully created!")
         
         return vectordb.as_retriever()
     except Exception as e:
