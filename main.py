@@ -79,7 +79,7 @@ def split_documents(documents):
         st.error("Splitting failed. No text chunks created.")
     else:
         st.success(f"Created {len(texts)} text chunks.")
-        st.write("Sample text chunk:", texts[0].page_content[:500])  # Display first 500 characters
+       
 
     return texts
 
@@ -99,10 +99,7 @@ def embeddings_on_local_vectordb(texts):
             st.error("No text chunks were created. Check document splitting.")
             return None
         
-        st.write(f"Initializing Chroma vector store... {len(texts)} text chunks received.")
          # Debug: Display the first chunk
-        st.write(f"Sample text chunk: {texts[0].page_content[:500]}")
-
         vectordb = Chroma.from_documents(
             texts, 
             embedding=OpenAIEmbeddings(),
@@ -334,12 +331,7 @@ def process_documents():
                 st.error("Text splitting failed. No text chunks generated.")
             else:
                 st.success(f"Generated {len(texts)} text chunks.")
-                st.write(f"Sample text chunk: {texts[0].page_content[:500]}")  # Show preview
 
-
-            # ✅ Add a debug print before creating the retriever
-            st.write("Creating retriever...")
-            return
             
             # Create vector store
             if not st.session_state.pinecone_db:
