@@ -99,7 +99,9 @@ def embeddings_on_local_vectordb(texts):
             st.error("No text chunks were created. Check document splitting.")
             return None
         
-        st.write("Initializing Chroma vector store...")
+        st.write(f"Initializing Chroma vector store... {len(texts)} text chunks received.")
+         # Debug: Display the first chunk
+        st.write(f"Sample text chunk: {texts[0].page_content[:500]}")
 
         vectordb = Chroma.from_documents(
             texts, 
@@ -107,8 +109,6 @@ def embeddings_on_local_vectordb(texts):
             persist_directory=LOCAL_VECTOR_STORE_DIR.as_posix()
         )
         
-        st.write("Initializing Chroma vector store...")
-
         vectordb.persist()
         retriever = vectordb.as_retriever(search_kwargs={'k': 7})
 
