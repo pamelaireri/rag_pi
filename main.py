@@ -70,8 +70,17 @@ def split_documents(documents):
         texts: List of document chunks
     """
     # TODO: Experiment with different chunk sizes and overlap values
+    if not documents:
+        st.error("No documents found to split.")
+        return []
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     texts = text_splitter.split_documents(documents)
+    if not texts:
+        st.error("Splitting failed. No text chunks created.")
+    else:
+        st.success(f"Created {len(texts)} text chunks.")
+        st.write("Sample text chunk:", texts[0].page_content[:500])  # Display first 500 characters
+
     return texts
 
 def embeddings_on_local_vectordb(texts):
@@ -85,6 +94,7 @@ def embeddings_on_local_vectordb(texts):
     """
     try:
         # TODO: Add progress indicator for embedding creation
+
         if not texts:
             st.error("No text chunks were created. Check document splitting.")
             return None
@@ -118,8 +128,15 @@ def embeddings_on_pinecone(texts):
     try:
         # Initialize Pinecone
         # Initialize a Pinecone client with your API key
+        if not texts:
+            st.error("No text chunks received for Pinecone vectorization.")
+            return None
         api_key=st.session_state.pinecone_api_key
         pc = Pinecone(api_key=st.session_state.pinecone_api_key
+        
+        if index_name not in pc.list_indexes().names():
+            st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
+            return None            
 )
         # Ensure the Pinecone index exists
         
