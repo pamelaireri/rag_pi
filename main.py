@@ -54,7 +54,7 @@ def load_documents():
         if not documents:
             st.error("Documents could not be loaded. Check file formats or permissions")
         else:
-            st.success(f"Loaded{len(documents)} documents scucessfully")
+            st.success(f"Loaded {len(documents)} documents scucessfully")
         return documents
     except Exception as e:
         st.error(f"Error loading documents: {str(e)}")
@@ -146,14 +146,14 @@ def embeddings_on_pinecone(texts):
             time.sleep(5)
         
          # Create new index with correct dimensions and spec for free tier
-        st.info("Creating new index with 1536 dimensions...")
+        #st.info("Creating new index with 1536 dimensions...")
         spec = ServerlessSpec(
             cloud="aws",  # Changed from aws to gcp
             region="us-east-1"  # Changed to free tier region
         )
         
         # Create new index with correct dimensions
-        st.info("Creating new index with 1536 dimensions...")
+        #st.info("Creating new index with 1536 dimensions...")
         pc.create_index(
             name=index_name,
             dimension=1536,
