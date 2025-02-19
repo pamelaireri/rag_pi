@@ -129,61 +129,66 @@ def embeddings_on_pinecone(texts):
         retriever: Document retriever object
     """
     try:
-        # Initialize Pinecone
-        # Initialize a Pinecone client with your API key
         if not texts:
             st.error("No text chunks received for Pinecone vectorization.")
             return None
+            
         pc = Pinecone(api_key=st.session_state.pinecone_api_key)
-                      
         index_name = st.session_state.pinecone_index
-
-           # Check if index exists
-        if index_name not in pc.list_indexes().names():
-            # Create new index with correct dimensions
-            pc.create_index(
-                name=index_name,
-                dimension=1536,  # OpenAI embedding dimension
-                metric='cosine'
-            )
-            st.success(f"Created new Pinecone index: {index_name}")
         
-        # Ensure the Pinecone index exists
-        index_list = pc.list_indexes().names()        
-
-        # Ensure the Pinecone index exists
+        # First check if index exists and delete if necessary
+        if index_name in pc.list_indexes().names():
+            st.warning(f"Deleting existing index {index_name} to recreate with correct dimensions")
+            pc.delete_index(index_name)
+            
+            # Wait for deletion
+            import time
+            time.sleep(5)
         
-        index_name = st.session_state.pinecone_index
-        if index_name not in pc.list_indexes().names():
-            st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
+        # Create new index with correct dimensions
+        st.info("Creating new index with 1536 dimensions...")
+        pc.create_index(
+            name=index_name,
+            dimension=1536,
+            metric='cosine'
+        )
+        
+        # Wait for index initialization
+        time.sleep(5)
+        
+        # Verify dimensions
+        index_info = pc.describe_index(index_name)
+        st.write(f"Index dimensions: {index_info.dimension}")
+        if index_info.dimension != 1536:
+            st.error(f"Index dimension mismatch. Expected 1536 but got {index_info.dimension}")
             return None
-
-          # Create embeddings
+            
+        # Create embeddings
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
-
-        # TODO: Add batch processing for large document sets
-        # Use pcvs instead of Pinecone for vector operations
-        #PineconeVectorStore.from_documents
         
         st.write("Creating Pinecone vector store...")
-
+        
         vectordb = PineconeVectorStore.from_documents(
             documents=texts,
             embedding=embeddings,
             index_name=index_name
         )
 
-        retriever = vectordb.as_retriever(search_kwargs={'k': 2})  # Retrieve top 2 similar documents
-
+        retriever = vectordb.as_retriever(search_kwargs={'k': 2})
 
         if retriever is None:
             st.error("Error: Pinecone retriever is None.")
+            return None
         else:
             st.success("Pinecone retriever successfully created!")
             return retriever
-        
+            
     except Exception as e:
         st.error(f"Error creating Pinecone vector store: {str(e)}")
+        # Add more detailed error information
+        st.write("Debug - Error details:", str(e))
+        if hasattr(e, 'response'):
+            st.write("Response content:", e.response.content)
         return None
     
 def query_llm(retriever, query):
