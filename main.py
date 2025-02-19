@@ -153,7 +153,7 @@ def embeddings_on_pinecone(texts):
         )
         
         # Create new index with correct dimensions
-        #st.info("Creating new index with 1536 dimensions...")
+        st.info("Creating new index with correct dimensions...")
         pc.create_index(
             name=index_name,
             dimension=1536,
