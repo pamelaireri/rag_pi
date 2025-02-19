@@ -145,12 +145,18 @@ def embeddings_on_pinecone(texts):
             import time
             time.sleep(5)
         
+        spec = ServerlessSpec(
+            cloud="aws",
+            region="us-west-2"  # or your preferred region
+        )
+        
         # Create new index with correct dimensions
         st.info("Creating new index with 1536 dimensions...")
         pc.create_index(
             name=index_name,
             dimension=1536,
-            metric='cosine'
+            metric='cosine',
+            spec=spec
         )
         
         # Wait for index initialization
