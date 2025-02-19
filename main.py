@@ -137,6 +137,17 @@ def embeddings_on_pinecone(texts):
         pc = Pinecone(api_key=st.session_state.pinecone_api_key)
                       
         index_name = st.session_state.pinecone_index
+
+           # Check if index exists
+        if index_name not in pc.list_indexes().names():
+            # Create new index with correct dimensions
+            pc.create_index(
+                name=index_name,
+                dimension=1536,  # OpenAI embedding dimension
+                metric='cosine'
+            )
+            st.success(f"Created new Pinecone index: {index_name}")
+        
         # Ensure the Pinecone index exists
         index_list = pc.list_indexes().names()        
 
