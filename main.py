@@ -390,6 +390,10 @@ def main():
         if "retriever" not in st.session_state:
             st.warning("Please process documents first.")
             return
+        
+        st.write("Debug in main before query_llm:")
+        st.write(f"1. Retriever in session state: {st.session_state.retriever is not None}")
+        st.write(f"2. Session state keys: {st.session_state.keys()}")
             
         st.chat_message("human").write(query)
         response = query_llm(st.session_state.retriever, query)
