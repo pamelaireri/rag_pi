@@ -145,9 +145,11 @@ def embeddings_on_pinecone(texts):
             import time
             time.sleep(5)
         
+         # Create new index with correct dimensions and spec for free tier
+        st.info("Creating new index with 1536 dimensions...")
         spec = ServerlessSpec(
-            cloud="aws",
-            region="us-west-2"  # or your preferred region
+            cloud="gcp",  # Changed from aws to gcp
+            region="gcp-starter"  # Changed to free tier region
         )
         
         # Create new index with correct dimensions
