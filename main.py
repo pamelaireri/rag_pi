@@ -189,7 +189,7 @@ def embeddings_on_pinecone(texts):
     except Exception as e:
         st.error(f"Error creating Pinecone vector store: {str(e)}")
         return None
-
+retriver = embeddings_on_pinecone(texts)
         
 def query_llm(retriever, query):
     """
