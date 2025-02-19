@@ -148,8 +148,8 @@ def embeddings_on_pinecone(texts):
          # Create new index with correct dimensions and spec for free tier
         st.info("Creating new index with 1536 dimensions...")
         spec = ServerlessSpec(
-            cloud="gcp",  # Changed from aws to gcp
-            region="gcp-starter"  # Changed to free tier region
+            cloud="aws",  # aws
+            region="us-east-1"  # Changed to free tier region
         )
         
         # Create new index with correct dimensions
