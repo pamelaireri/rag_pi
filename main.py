@@ -1,7 +1,8 @@
 import os
 import tempfile
 from pathlib import Path
-
+import docx2txt
+from pdfminer.high_level import extract_text
 
 # Vector store and embedding imports
 from langchain_community.embeddings import OpenAIEmbeddings
@@ -323,9 +324,9 @@ def setup_interface():
          # Update file upload to accept more formats
     st.session_state.source_docs = st.file_uploader(
         label="Upload Documents",
-        type=["pdf", "txt", "doc", "docx"],  # Added new file types
+        type=["pdf", "txt", "docx"],  # Added new file types
         accept_multiple_files=True,
-        help="Upload PDF, TXT, DOC, or DOCX files"
+        help="Upload PDF, TXT, or DOCX files"
     )
     
 
