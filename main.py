@@ -166,7 +166,7 @@ def embeddings_on_pinecone(texts):
         
         # Verify dimensions
         index_info = pc.describe_index(index_name)
-        st.write(f"Index dimensions: {index_info.dimension}")
+        #st.write(f"Index dimensions: {index_info.dimension}")
         if index_info.dimension != 1536:
             st.error(f"Index dimension mismatch. Expected 1536 but got {index_info.dimension}")
             return None
@@ -174,7 +174,7 @@ def embeddings_on_pinecone(texts):
         # Create embeddings
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
         
-        st.write("Creating Pinecone vector store...")
+        #st.write("Creating Pinecone vector store...")
         
         vectordb = PineconeVectorStore.from_documents(
             documents=texts,
@@ -194,7 +194,7 @@ def embeddings_on_pinecone(texts):
     except Exception as e:
         st.error(f"Error creating Pinecone vector store: {str(e)}")
         # Add more detailed error information
-        st.write("Debug - Error details:", str(e))
+        #st.write("Debug - Error details:", str(e))
         if hasattr(e, 'response'):
             st.write("Response content:", e.response.content)
         return None
@@ -209,9 +209,9 @@ def query_llm(retriever, query):
     Returns:
         result: Generated answer
     """
-    st.write("Debug in query_llm:")
-    st.write(f"1. Received retriever type: {type(retriever)}")
-    st.write(f"2. Retriever is None: {retriever is None}")
+    #st.write("Debug in query_llm:")
+    #st.write(f"1. Received retriever type: {type(retriever)}")
+    #st.write(f"2. Retriever is None: {retriever is None}")
     try:
         # TODO: Add custom prompting for better answers
         
@@ -362,14 +362,14 @@ def process_documents():
 
             #store retriever in session state
             st.session_state.retriever = retriever
-            st.write("Debug in process_documents:")
-            st.write(f"1. Retriever type: {type(retriever)}")
-            st.write(f"2. Retriever in session state: {st.session_state.retriever is not None}")
-            st.write(f"3. Session state keys: {st.session_state.keys()}")
-            st.success("Documents processed successfully")
+            #st.write("Debug in process_documents:")
+            #st.write(f"1. Retriever type: {type(retriever)}")
+            #st.write(f"2. Retriever in session state: {st.session_state.retriever is not None}")
+            #st.write(f"3. Session state keys: {st.session_state.keys()}")
+            #st.success("Documents processed successfully")
 
-            st.success("Documents processed successfully")
-            st.write("✅ Retriever stored in session state.")
+            #st.success("Documents processed successfully")
+            #st.write("✅ Retriever stored in session state.")
 
             
     except Exception as e:
@@ -400,9 +400,9 @@ def main():
             st.warning("Please process documents first.")
             return
         
-        st.write("Debug in main before query_llm:")
-        st.write(f"1. Retriever in session state: {st.session_state.retriever is not None}")
-        st.write(f"2. Session state keys: {st.session_state.keys()}")
+        #st.write("Debug in main before query_llm:")
+        #st.write(f"1. Retriever in session state: {st.session_state.retriever is not None}")
+        #st.write(f"2. Session state keys: {st.session_state.keys()}")
             
         st.chat_message("human").write(query)
         response = query_llm(st.session_state.retriever, query)
