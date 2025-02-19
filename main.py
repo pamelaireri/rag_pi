@@ -339,14 +339,14 @@ def process_documents():
             else:
                 retriever = embeddings_on_pinecone(texts)
 
-            if retriever is None:
-                st.error("Retriever initialization failed. Debug embeddings function.")
-                return
+         #   if retriever is None:
+          #      st.error("Retriever initialization failed. Debug embeddings function.")
+           #     return
                 #st.session_state.retriever = embeddings_on_local_vectordb(texts)
             #else:
                # st.session_state.retriever = embeddings_on_pinecone(texts)
             
-            s#t.success("Documents processed successfully!")
+            st.success("Documents processed successfully!")
 
             #store retriever in session state
             st.session_state.retriever = retriever
