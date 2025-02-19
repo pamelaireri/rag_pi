@@ -1,8 +1,7 @@
 import os
 import tempfile
 from pathlib import Path
-import docx2txt
-from pdfminer.high_level import extract_text
+
 
 # Vector store and embedding imports
 from langchain_community.embeddings import OpenAIEmbeddings
@@ -10,11 +9,6 @@ from langchain_community.vectorstores import Chroma, Pinecone
 from langchain_community.vectorstores import Pinecone as pvs  # This is Langchain's vectorstore wrapper
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
-# Add these imports at the top
-from langchain_community.document_loaders import TextLoader
-from langchain_community.document_loaders import UnstructuredWordDocumentLoader
-from langchain_community.document_loaders import DirectoryLoader
-from langchain_community.document_loaders import PDFMinerLoader
 
 from pinecone import Pinecone, ServerlessSpec
 
@@ -54,35 +48,8 @@ def load_documents():
         if not any(TMP_DIR.iterdir()):
             st.error("No documents found in the temporary directory.")
             return []
-        #loader = DirectoryLoader(TMP_DIR.as_posix(), glob='**/*.pdf')
-        # Create loaders for each file type
-        pdf_loader = DirectoryLoader(TMP_DIR.as_posix(), glob="**/*.pdf", loader_cls=PDFMinerLoader)
-        txt_loader = DirectoryLoader(TMP_DIR.as_posix(), glob="**/*.txt", loader_cls=TextLoader)
-        doc_loader = DirectoryLoader(TMP_DIR.as_posix(), glob="**/*.doc*", loader_cls=UnstructuredWordDocumentLoader)
-
-        # Load documents from each loader
-        documents = []
-        
-        try:
-            pdf_docs = pdf_loader.load()
-            documents.extend(pdf_docs)
-            st.success(f"Loaded {len(pdf_docs)} PDF documents")
-        except Exception as e:
-            st.warning(f"Error loading PDF documents: {str(e)}")
-
-        try:
-            txt_docs = txt_loader.load()
-            documents.extend(txt_docs)
-            st.success(f"Loaded {len(txt_docs)} TXT documents")
-        except Exception as e:
-            st.warning(f"Error loading TXT documents: {str(e)}")
-
-        try:
-            doc_docs = doc_loader.load()
-            documents.extend(doc_docs)
-            st.success(f"Loaded {len(doc_docs)} DOC documents")
-        except Exception as e:
-            st.warning(f"Error loading DOC documents: {str(e)}")
+        loader = DirectoryLoader(TMP_DIR.as_posix(), glob='**/*.pdf')
+        documents = loader.load()
 
         if not documents:
             st.error("Documents could not be loaded. Check file formats or permissions")
@@ -181,7 +148,7 @@ def embeddings_on_pinecone(texts):
          # Create new index with correct dimensions and spec for free tier
         st.info("Creating new index with 1536 dimensions...")
         spec = ServerlessSpec(
-            cloud="aws",  # aws
+            cloud="aws",  # Changed from aws to gcp
             region="us-east-1"  # Changed to free tier region
         )
         
@@ -321,14 +288,12 @@ def setup_interface():
     
     # File upload
     # TODO: Add file size validation
-         # Update file upload to accept more formats
     st.session_state.source_docs = st.file_uploader(
-        label="Upload Documents",
-        type=["pdf", "txt", "docx"],  # Added new file types
+        label="Upload PDF Documents",
+        type="pdf",
         accept_multiple_files=True,
-        help="Upload PDF, TXT, or DOCX files"
+        help="Upload one or more PDF documents"
     )
-    
 
 def process_documents():
     """
@@ -353,15 +318,12 @@ def process_documents():
     
     try:
         with st.spinner("Processing documents..."):
-            # Save uploaded files to temporary directory with correct extensions
+            # Save uploaded files to temporary directory
             for source_doc in st.session_state.source_docs:
-                # Get the file extension from the uploaded file
-                file_extension = source_doc.name.split('.')[-1].lower()
-                
                 with tempfile.NamedTemporaryFile(
                     delete=False, 
                     dir=TMP_DIR.as_posix(),
-                    suffix=f'.{file_extension}'  # Use the correct extension
+                    suffix='.pdf'
                 ) as tmp_file:
                     tmp_file.write(source_doc.read())
             
