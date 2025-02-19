@@ -200,8 +200,12 @@ def query_llm(retriever, query):
     Returns:
         result: Generated answer
     """
+    st.write("Debug in query_llm:")
+    st.write(f"1. Received retriever type: {type(retriever)}")
+    st.write(f"2. Retriever is None: {retriever is None}")
     try:
         # TODO: Add custom prompting for better answers
+        
         if retriever is None:
             st.error("Error: The retriever is None. Ensure documents are processed correctly.")
             return "Error: The retriever is not initialized."
@@ -320,7 +324,7 @@ def process_documents():
                 st.error("Document loading failed.")
                 return
             
-            # Clean up temporary files (*****Ask to gain a better understanding****)
+            # Clean up temporary files
             for file in TMP_DIR.iterdir():
                 TMP_DIR.joinpath(file).unlink()
             
@@ -349,6 +353,12 @@ def process_documents():
 
             #store retriever in session state
             st.session_state.retriever = retriever
+            st.write("Debug in process_documents:")
+            st.write(f"1. Retriever type: {type(retriever)}")
+            st.write(f"2. Retriever in session state: {st.session_state.retriever is not None}")
+            st.write(f"3. Session state keys: {st.session_state.keys()}")
+            st.success("Documents processed successfully")
+
             st.success("Documents processed successfully")
             st.write("✅ Retriever stored in session state.")
 
