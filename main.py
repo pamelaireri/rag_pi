@@ -144,8 +144,8 @@ def embeddings_on_pinecone(texts):
         
         index_name = st.session_state.pinecone_index
         if index_name not in pc.list_indexes().names():
-         st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
-        return None
+            st.error(f"Pinecone index '{index_name}' does not exist. Create it first.")
+            return None
 
           # Create embeddings
         embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.openai_api_key)
@@ -156,21 +156,6 @@ def embeddings_on_pinecone(texts):
         
         st.write("Creating Pinecone vector store...")
 
-        """vectordb = Pinecone.from_documents(
-            texts, 
-            embeddings, 
-            index_name=st.session_state.pinecone_index
-    
-        )
-        if retriever is None:
-            st.error("Error: Pinecone retriever is None.")
-        else:
-            st.success("Pinecone retriever successfully created!")
-        
-        return vectordb.as_retriever()
-    except Exception as e:
-        st.error(f"Error creating Pinecone vector store: {str(e)}")
-        return None """
         vectordb = PineconeVectorStore.from_documents(
             documents=texts,
             embedding=embeddings,
@@ -184,8 +169,8 @@ def embeddings_on_pinecone(texts):
             st.error("Error: Pinecone retriever is None.")
         else:
             st.success("Pinecone retriever successfully created!")
-
-        return retriever
+            return retriever
+        
     except Exception as e:
         st.error(f"Error creating Pinecone vector store: {str(e)}")
         return None
