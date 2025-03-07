@@ -135,15 +135,15 @@ def embeddings_on_pinecone(texts):
             
         pc = Pinecone(api_key=st.session_state.pinecone_api_key)
         index_name = st.session_state.pinecone_index
-        
-        # First check if index exists and delete if necessary
-        if index_name in pc.list_indexes().names():
-            st.warning(f"Deleting existing index {index_name} to recreate with correct dimensions")
-            pc.delete_index(index_name)
+       
+        #First check if index exists and delete if necessary
+        #if index_name in pc.list_indexes().names():
+            #st.warning(f"Deleting existing index {index_name} to recreate with correct dimensions")
+            #pc.delete_index(index_name)
             
             # Wait for deletion
-            import time
-            time.sleep(5)
+            #import time
+            #time.sleep(5)
         
          # Create new index with correct dimensions and spec for free tier
         #st.info("Creating new index with 1536 dimensions...")
